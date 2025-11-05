@@ -1,0 +1,4 @@
+[core]
+    remote = dagshub
+['remote "dagshub"']
+    url = https://dagshub.com/patryk.janiak664/Generic-Recommender-Semantics-Put.dvc
