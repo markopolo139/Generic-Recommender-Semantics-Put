@@ -1,6 +1,7 @@
 import json
 import os
 import ast
+import argparse
 
 def format_steam_games(input_path, output_path):
     print(f"Formatting {input_path}...")
@@ -51,13 +52,23 @@ def format_user_reviews(input_path, output_path):
     print(f"Formatted user reviews saved to {output_path}")
 
 if __name__ == "__main__":
-    input_directory = 'datasets/steam'
-    output_directory = 'datasets/steam'
+    parser = argparse.ArgumentParser(
+        description="A script to format Steam game and user review data."
+    )
+    
+    parser.add_argument(
+        "working_directory", 
+        type=str, 
+        help="The path to the directory containing the input JSON files."
+    )
+    
+    args = parser.parse_args()
+    working_directory = args.working_directory
 
-    steam_games_input = os.path.join(input_directory, 'steam_games.json')
-    steam_games_output = os.path.join(output_directory, 'formatted_steam_games.json')
+    steam_games_input = os.path.join(working_directory, 'steam_games.json')
+    steam_games_output = os.path.join(working_directory, 'formatted_steam_games.json')
     format_steam_games(steam_games_input, steam_games_output)
 
-    user_reviews_input = os.path.join(input_directory, 'australian_user_reviews.json')
-    user_reviews_output = os.path.join(output_directory, 'formatted_user_reviews.json')
+    user_reviews_input = os.path.join(working_directory, 'australian_user_reviews.json')
+    user_reviews_output = os.path.join(working_directory, 'formatted_user_reviews.json')
     format_user_reviews(user_reviews_input, user_reviews_output)
