@@ -147,3 +147,4 @@ voluptuous==0.15.2
 wcwidth==0.2.14
 yarl==1.22.0
 zc-lockfile==4.0
+pycleora==2.0.0
