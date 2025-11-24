@@ -5,8 +5,8 @@ from torch_geometric.data import Data
 
 
 def load_movielens_data(
-    movies_path="datasets/movies/movies.csv",
-    ratings_path="datasets/movies/ratings.csv",
+    movies_path="../datasets/movies/movies.csv",
+    ratings_path="../datasets/movies/ratings.csv",
 ):
     """
     Loads and preprocesses the MovieLens dataset.
@@ -21,8 +21,8 @@ def load_movielens_data(
 
 
 def load_steam_data(
-    reviews_path="datasets/steam/formatted_user_reviews.json",
-    items_path="datasets/steam/formatted_steam_games.json",
+    reviews_path="../datasets/steam/formatted_user_reviews.json",
+    items_path="../datasets/steam/formatted_steam_games.json",
 ):
     """
     Loads and preprocesses the Steam dataset.
