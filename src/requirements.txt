@@ -1,0 +1,11 @@
+# Requirements for the src/ module
+
+pandas
+numpy
+torch
+torch-geometric
+torch-cluster
+torch-scatter
+torch-sparse
+tqdm
+pycleora
