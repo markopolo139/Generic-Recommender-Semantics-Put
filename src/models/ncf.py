@@ -215,7 +215,7 @@ class NCFGenerator(EmbeddingGenerator):
         num_items = len(self.item_map)
         
         self.model = NCFModel(num_users, num_items, self.embedding_dim_gmf, self.embedding_dim_mlp, self.mlp_layers).to(self.device)
-        self.model.load_state_dict(checkpoint)
+        self.model.load_state_dict(checkpoint['model_state_dict'])
 
     def legacy_load(self, path: str, interactions_df: pd.DataFrame, user_col: str = 'user_id', item_col: str = 'item_id') -> None:
         """
