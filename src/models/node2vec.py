@@ -55,7 +55,7 @@ class Node2VecGenerator(EmbeddingGenerator):
         edge_index_src = np.concatenate([src_nodes, dst_nodes])
         edge_index_dst = np.concatenate([dst_nodes, src_nodes])
         
-        edge_index = torch.tensor([edge_index_src, edge_index_dst], dtype=torch.long)
+        edge_index = np.stack([edge_index_src, edge_index_dst], dtype=torch.long)
         
         self.model = Node2Vec(
             edge_index=edge_index,
