@@ -1,0 +1,57 @@
+@startuml
+skinparam backgroundColor white
+skinparam activity {
+  BackgroundColor #FEFEFE
+  BorderColor #333333
+  ArrowColor #333333
+}
+
+start
+
+:<b>Initialize Generic Recommender System</b>;
+
+partition "Data Ingestion & Preprocessing" {
+    fork
+        :<b>Load MovieLens Dataset</b>
+        (User Ratings, Tags, Genres);
+        :Normalize Ratings (0.5 - 5.0);
+    fork again
+        :<b>Load Steam Reviews Dataset</b>
+        (Reviews, Game Metadata, Ownership);
+        :Process Implicit & Explicit Feedback;
+    end fork
+
+    :<b>Dataset Merge</b>
+    (Combine Users, Items, and Genres);
+}
+
+partition "Graph Construction" {
+    :Identify Entities (Users, Items, Features);
+    :<b>Build Heterogeneous Graph</b>
+    (Connect User, Item, and Feature Nodes);
+}
+
+partition "Model Training & Execution" {
+    switch (Select Model Strategy)
+    case ( Latent Factors )
+        fork
+            :<b>Matrix Factorization</b>;
+        fork again
+            :<b>Neural Collaborative Filtering (NCF)</b>;
+        end fork
+    case ( Graph Neural Networks )
+        fork
+            :<b>LightGCN</b>;
+        fork again
+            :<b>Node2Vec</b>;
+        fork again
+            :<b>Cleora</b>;
+        end fork
+    endswitch
+}
+
+:Generate Top-N Recommendations;
+
+
+stop
+@enduml
