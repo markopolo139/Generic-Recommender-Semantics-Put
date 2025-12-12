@@ -55,7 +55,7 @@ class Node2VecGenerator(EmbeddingGenerator):
         edge_index_src = np.concatenate([src_nodes, dst_nodes])
         edge_index_dst = np.concatenate([dst_nodes, src_nodes])
         
-        edge_index = torch.tensor([edge_index_src, edge_index_dst], dtype=torch.long)
+        edge_index = np.stack([edge_index_src, edge_index_dst], dtype=torch.long)
         
         self.model = Node2Vec(
             edge_index=edge_index,
@@ -150,3 +150,39 @@ class Node2VecGenerator(EmbeddingGenerator):
         ).to(self.device)
         
         self.model.load_state_dict(checkpoint['model_state_dict'])
+
+    def legacy_load(self, path: str, interactions_df: pd.DataFrame, user_col: str = 'user_id', item_col: str = 'item_id') -> None:
+        """
+        Loads a legacy checkpoint that only contains the model state dict (no maps).
+        Reconstructs maps from interactions_df.
+        """
+        checkpoint = torch.load(path, map_location=self.device)
+        
+        # Reconstruct node map (Node2Vec uses all unique nodes sorted)
+        users = interactions_df[user_col].unique()
+        items = interactions_df[item_col].unique()
+        
+        all_nodes = np.concatenate([users, items])
+        all_nodes = np.unique(all_nodes) # sorts and uniques
+        
+        self.node_map = {node: i for i, node in enumerate(all_nodes)}
+        self.inv_node_map = {i: node for node, i in self.node_map.items()}
+
+        num_nodes = len(self.node_map)
+        # Dummy edge index for initialization
+        dummy_edge_index = torch.zeros((2, 1), dtype=torch.long)
+        
+        self.model = Node2Vec(
+            edge_index=dummy_edge_index, 
+            embedding_dim=self.embedding_dim,
+            walk_length=self.walk_length,
+            context_size=self.context_size,
+            walks_per_node=self.walks_per_node,
+            num_negative_samples=self.num_negative_samples,
+            p=self.p,
+            q=self.q,
+            sparse=True,
+            num_nodes=num_nodes # explicitly set num_nodes
+        ).to(self.device)
+        
+        self.model.load_state_dict(checkpoint)

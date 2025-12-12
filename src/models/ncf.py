@@ -216,3 +216,25 @@ class NCFGenerator(EmbeddingGenerator):
         
         self.model = NCFModel(num_users, num_items, self.embedding_dim_gmf, self.embedding_dim_mlp, self.mlp_layers).to(self.device)
         self.model.load_state_dict(checkpoint['model_state_dict'])
+
+    def legacy_load(self, path: str, interactions_df: pd.DataFrame, user_col: str = 'user_id', item_col: str = 'item_id') -> None:
+        """
+        Loads a legacy checkpoint that only contains the model state dict (no maps).
+        Reconstructs maps from interactions_df.
+        """
+        checkpoint = torch.load(path, map_location=self.device)
+        
+        # Reconstruct maps
+        unique_users = interactions_df[user_col].unique()
+        unique_items = interactions_df[item_col].unique()
+
+        self.user_map = {user: i for i, user in enumerate(unique_users)}
+        self.item_map = {item: i for i, item in enumerate(unique_items)}
+        self.inv_user_map = {i: user for user, i in self.user_map.items()}
+        self.inv_item_map = {i: item for item, i in self.item_map.items()}
+
+        num_users = len(self.user_map)
+        num_items = len(self.item_map)
+        
+        self.model = NCFModel(num_users, num_items, self.embedding_dim_gmf, self.embedding_dim_mlp, self.mlp_layers).to(self.device)
+        self.model.load_state_dict(checkpoint)

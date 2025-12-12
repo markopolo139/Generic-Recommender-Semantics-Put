@@ -1,0 +1,204 @@
+Model: LightGCN
+Evaluation Results:
+------------------------------
+Precision@20: 0.0030
+Precision@50: 0.0026
+Precision@100: 0.0022
+Precision@1000: 0.0007
+HitRate@20: 0.0595
+HitRate@50: 0.1290
+HitRate@100: 0.2210
+HitRate@1000: 0.7162
+NDCG@20: 0.0216
+NDCG@50: 0.0352
+NDCG@100: 0.0501
+NDCG@1000: 0.1098
+MAP@20: 0.0114
+MAP@50: 0.0136
+MAP@100: 0.0149
+MAP@1000: 0.0167
+Diversity@20: 0.1342
+Diversity@50: 0.1489
+Diversity@100: 0.1667
+Diversity@1000: 0.2559
+Novelty@20: 8.8381
+Novelty@50: 9.1411
+Novelty@100: 9.4603
+Novelty@1000: 11.5608
+Serendipity@20: 0.1377
+Serendipity@50: 0.1341
+Serendipity@100: 0.1378
+Serendipity@1000: 0.2104
+AveragePopularity@20: 940.9816
+AveragePopularity@50: 780.1606
+AveragePopularity@100: 643.8084
+AveragePopularity@1000: 215.1183
+AUC (Global): 0.9119
+AUC (Sampled): 0.9119
+MeanRank: 1231.2251
+MRR: 0.0168
+------------------------------
+
+Model: Node2Vec 
+Evaluation Results:
+------------------------------
+Precision@20: 0.0030
+Precision@50: 0.0025
+Precision@100: 0.0021
+Precision@1000: 0.0007
+HitRate@20: 0.0603
+HitRate@50: 0.1265
+HitRate@100: 0.2148
+HitRate@1000: 0.6817
+NDCG@20: 0.0220
+NDCG@50: 0.0350
+NDCG@100: 0.0492
+NDCG@1000: 0.1056
+MAP@20: 0.0117
+MAP@50: 0.0137
+MAP@100: 0.0149
+MAP@1000: 0.0167
+Diversity@20: 0.0150
+Diversity@50: 0.0191
+Diversity@100: 0.0252
+Diversity@1000: 0.2483
+Novelty@20: 8.5311
+Novelty@50: 8.8920
+Novelty@100: 9.2693
+Novelty@1000: 11.6832
+Serendipity@20: 0.0645
+Serendipity@50: 0.0659
+Serendipity@100: 0.0681
+Serendipity@1000: 0.1835
+AveragePopularity@20: 1150.8661
+AveragePopularity@50: 926.6411
+AveragePopularity@100: 740.7875
+AveragePopularity@1000: 232.1744
+AUC (Global): 0.8755
+AUC (Sampled): 0.8754
+MeanRank: 1739.3103
+MRR: 0.0168
+------------------------------
+
+Model: MatrixFactorization 
+Evaluation Results:
+------------------------------
+Precision@20: 0.0012
+Precision@50: 0.0010
+Precision@100: 0.0008
+Precision@1000: 0.0004
+HitRate@20: 0.0238
+HitRate@50: 0.0494
+HitRate@100: 0.0832
+HitRate@1000: 0.4040
+NDCG@20: 0.0092
+NDCG@50: 0.0142
+NDCG@100: 0.0197
+NDCG@1000: 0.0569
+MAP@20: 0.0052
+MAP@50: 0.0060
+MAP@100: 0.0065
+MAP@1000: 0.0075
+Diversity@20: 0.5232
+Diversity@50: 0.5122
+Diversity@100: 0.5030
+Diversity@1000: 0.4775
+Novelty@20: 10.2716
+Novelty@50: 10.6653
+Novelty@100: 10.9883
+Novelty@1000: 12.2124
+Serendipity@20: 0.3967
+Serendipity@50: 0.3946
+Serendipity@100: 0.3936
+Serendipity@1000: 0.4020
+AveragePopularity@20: 443.9136
+AveragePopularity@50: 355.7410
+AveragePopularity@100: 295.7892
+AveragePopularity@1000: 145.2700
+AUC (Global): 0.8415
+AUC (Sampled): 0.8415
+MeanRank: 2213.6435
+MRR: 0.0077
+------------------------------
+
+Model: NCF
+Evaluation Results:
+------------------------------
+Precision@20: 0.0004
+Precision@50: 0.0003
+Precision@100: 0.0003
+Precision@1000: 0.0001
+HitRate@20: 0.0083
+HitRate@50: 0.0175
+HitRate@100: 0.0291
+HitRate@1000: 0.1249
+NDCG@20: 0.0030
+NDCG@50: 0.0049
+NDCG@100: 0.0067
+NDCG@1000: 0.0180
+MAP@20: 0.0016
+MAP@50: 0.0019
+MAP@100: 0.0021
+MAP@1000: 0.0024
+Diversity@20: 0.6694
+Diversity@50: 0.6722
+Diversity@100: 0.6656
+Diversity@1000: 0.5884
+Novelty@20: 13.4603
+Novelty@50: 13.9575
+Novelty@100: 14.3814
+Novelty@1000: 15.8523
+Serendipity@20: 1.0073
+Serendipity@50: 1.0213
+Serendipity@100: 1.0324
+Serendipity@1000: 1.0646
+AveragePopularity@20: 167.5091
+AveragePopularity@50: 137.9193
+AveragePopularity@100: 113.8691
+AveragePopularity@1000: 47.8825
+AUC (Global): 0.4458
+AUC (Sampled): 0.4458
+MeanRank: 7737.3482
+MRR: 0.0025
+------------------------------
+
+Model: Cleora
+Evaluation Results:
+------------------------------
+Precision@20: 0.0001
+Precision@50: 0.0001
+Precision@100: 0.0001
+Precision@1000: 0.0001
+HitRate@20: 0.0014
+HitRate@50: 0.0033
+HitRate@100: 0.0072
+HitRate@1000: 0.0692
+NDCG@20: 0.0005
+NDCG@50: 0.0009
+NDCG@100: 0.0015
+NDCG@1000: 0.0085
+MAP@20: 0.0002
+MAP@50: 0.0003
+MAP@100: 0.0003
+MAP@1000: 0.0005
+Diversity@20: 0.8553
+Diversity@50: 0.8833
+Diversity@100: 0.8975
+Diversity@1000: 0.9348
+Novelty@20: 16.1614
+Novelty@50: 16.1988
+Novelty@100: 16.2140
+Novelty@1000: 16.2690
+Serendipity@20: 0.9586
+Serendipity@50: 0.9573
+Serendipity@100: 0.9559
+Serendipity@1000: 0.9527
+AveragePopularity@20: 27.8475
+AveragePopularity@50: 27.5440
+AveragePopularity@100: 27.3009
+AveragePopularity@1000: 26.7631
+AUC (Global): 0.4973
+AUC (Sampled): 0.4973
+MeanRank: 7019.0938
+MRR: 0.0007
+------------------------------
