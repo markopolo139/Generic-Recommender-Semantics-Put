@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor white
+skinparam activity {
+  BackgroundColor #FEFEFE
+  BorderColor #333333
+  ArrowColor #333333
+}
+
+start
+
+:<b>Input User ID</b>;
+
+partition "Graph Retrieval" {
+    :Query Heterogeneous Graph;
+    
+    if (User Exists?) then (No)
+        :Return "Cold Start" / Popular Items;
+        stop
+    else (Yes)
+    endif
+    
+    fork
+        :<b>Fetch User Embedding</b>;
+    fork again
+        :<b>Fetch Interaction History</b>;
+        :Identify "Known" Items;
+    end fork
+}
+
+partition "Scoring & Ranking" {
+    :<b>Compute Similarity Scores</b>
+    (User Vector vs. All Candidate Item Vectors);
+    
+    :<b>Filter Candidates</b>
+    (Remove items found in Interaction History);
+    
+    :<b>Rank Top-N Items</b>
+    (Sort by highest prediction score);
+}
+
+:Return Recommendation List;
+
+stop
+@enduml
