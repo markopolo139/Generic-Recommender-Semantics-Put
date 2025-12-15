@@ -32,21 +32,17 @@ partition "Graph Construction" {
 }
 
 partition "Model Training & Execution" {
-    switch (Select Model Strategy)
-    case ( Latent Factors )
-        fork
-            :<b>Matrix Factorization</b>;
-        fork again
-            :<b>Neural Collaborative Filtering (NCF)</b>;
-        end fork
-    case ( Graph Neural Networks )
-        fork
-            :<b>LightGCN</b>;
-        fork again
-            :<b>Node2Vec</b>;
-        fork again
-            :<b>Cleora</b>;
-        end fork
+    switch ( <b>Select Model Strategy</b> )
+    case (  )
+        :<b>Matrix Factorization</b>;
+    case (  )
+        :<b>NCF</b>;
+    case (  )
+        :<b>LightGCN</b>;
+    case (  )
+        :<b>Node2Vec</b>;
+    case (  )
+        :<b>Cleora</b>;
     endswitch
 }
 
