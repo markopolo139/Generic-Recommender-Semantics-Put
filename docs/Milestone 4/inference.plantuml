@@ -8,7 +8,7 @@ skinparam activity {
 
 start
 
-:<b>Input User ID</b>;
+:Input User ID;
 
 partition "Graph Retrieval" {
     :Query Heterogeneous Graph;
@@ -20,21 +20,21 @@ partition "Graph Retrieval" {
     endif
     
     fork
-        :<b>Fetch User Embedding</b>;
+        :Fetch User Embedding;
     fork again
-        :<b>Fetch Interaction History</b>;
+        :Fetch Interaction History;
         :Identify "Known" Items;
     end fork
 }
 
 partition "Scoring & Ranking" {
-    :<b>Compute Similarity Scores</b>
+    :Compute Similarity Scores
     (User Vector vs. All Candidate Item Vectors);
     
-    :<b>Filter Candidates</b>
+    :Filter Candidates
     (Remove items found in Interaction History);
     
-    :<b>Rank Top-N Items</b>
+    :Rank Top-N Items
     (Sort by highest prediction score);
 }
 

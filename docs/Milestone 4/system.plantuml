@@ -8,41 +8,41 @@ skinparam activity {
 
 start
 
-:<b>Initialize Generic Recommender System</b>;
+:Initialize Generic Recommender System;
 
 partition "Data Ingestion & Preprocessing" {
     fork
-        :<b>Load MovieLens Dataset</b>
+        :Load MovieLens Dataset
         (User Ratings, Tags, Genres);
         :Normalize Ratings (0.5 - 5.0);
     fork again
-        :<b>Load Steam Reviews Dataset</b>
+        :Load Steam Reviews Dataset
         (Reviews, Game Metadata, Ownership);
         :Process Implicit & Explicit Feedback;
     end fork
 
-    :<b>Dataset Merge</b>
+    :Dataset Merge
     (Combine Users, Items, and Genres);
 }
 
 partition "Graph Construction" {
     :Identify Entities (Users, Items, Features);
-    :<b>Build Heterogeneous Graph</b>
+    :Build Heterogeneous Graph
     (Connect User, Item, and Feature Nodes);
 }
 
 partition "Model Training & Execution" {
-    switch ( <b>Select Model Strategy</b> )
+    switch ( Select Model Strategy )
     case (  )
-        :<b>Matrix Factorization</b>;
+        :Matrix Factorization;
     case (  )
-        :<b>NCF</b>;
+        :NCF;
     case (  )
-        :<b>LightGCN</b>;
+        :LightGCN;
     case (  )
-        :<b>Node2Vec</b>;
+        :Node2Vec;
     case (  )
-        :<b>Cleora</b>;
+        :Cleora;
     endswitch
 }
 
