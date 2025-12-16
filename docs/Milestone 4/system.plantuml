@@ -11,24 +11,23 @@ start
 :Initialize Generic Recommender System;
 
 partition "Data Ingestion & Preprocessing" {
-    fork
-        :Load MovieLens Dataset
-        (User Ratings, Tags, Genres);
-        :Normalize Ratings (0.5 - 5.0);
-    fork again
-        :Load Steam Reviews Dataset
-        (Reviews, Game Metadata, Ownership);
-        :Process Implicit & Explicit Feedback;
-    end fork
+    :Ingest Source Datasets
+    Input can be any domain.;
 
-    :Dataset Merge
-    (Combine Users, Items, and Genres);
+    :Define Entity Mappings
+    (Map Raw Columns -> Users, Items, Features);
+    
+    :Preprocessing & Merge
+    Normalizes ratings and processes
+    implicit/explicit feedback types;
 }
 
 partition "Graph Construction" {
-    :Identify Entities (Users, Items, Features);
-    :Build Heterogeneous Graph
-    (Connect User, Item, and Feature Nodes);
+    :Receive Normalized Data;
+    
+    :Construct Heterogeneous Graph
+    Creates edges between User, Item,
+    and Feature nodes;
 }
 
 partition "Model Training & Execution" {
@@ -44,6 +43,11 @@ partition "Model Training & Execution" {
     case (  )
         :Cleora;
     endswitch
+    :Train Selected Model;
+    if (Ground Truth Available?) then (Yes)
+    :Run Evaluation Metrics;
+    else (No / Skip)
+    endif
 }
 
 :Generate Top-N Recommendations;
