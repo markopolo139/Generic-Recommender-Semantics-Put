@@ -18,6 +18,12 @@ class EmbeddingGenerator(ABC):
         """
         pass
 
+    def train(self, interactions_df: pd.DataFrame, **kwargs) -> None:
+        """
+        Alias for fit method. Trains the model.
+        """
+        self.fit(interactions_df, **kwargs)
+
     @abstractmethod
     def get_embeddings(self) -> Dict[str, np.ndarray]:
         """

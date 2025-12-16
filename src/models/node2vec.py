@@ -31,34 +31,49 @@ class Node2VecGenerator(EmbeddingGenerator):
         user_col = kwargs.get('user_col', 'user_id')
         item_col = kwargs.get('item_col', 'item_id')
 
-        # Create graph from interactions
-        # We treat users and items as nodes.
-        # To ensure uniqueness, we might need to prefix them if not already done.
-        # Assuming interactions_df has distinct IDs for users and items or we prefix them.
-        # The notebook prefixes them (e.g. 'movielens_user_...').
-        # I'll assume the input dataframe has unique identifiers or handle it.
-        # For generic usage, let's assume they are unique or use the column values directly.
-        
-        users = interactions_df[user_col].unique()
-        items = interactions_df[item_col].unique()
-        
-        all_nodes = np.concatenate([users, items])
-        all_nodes = np.unique(all_nodes) # safety
-        
-        self.node_map = {node: i for i, node in enumerate(all_nodes)}
-        self.inv_node_map = {i: node for node, i in self.node_map.items()}
-        
-        src_nodes = interactions_df[user_col].map(self.node_map).values
-        dst_nodes = interactions_df[item_col].map(self.node_map).values
-        
-        # Undirected graph: (u, v) and (v, u)
-        edge_index_src = np.concatenate([src_nodes, dst_nodes])
-        edge_index_dst = np.concatenate([dst_nodes, src_nodes])
-        
-        edge_index = np.stack([edge_index_src, edge_index_dst], dtype=torch.long)
-        
+        # Check if pre-constructed graph data is provided
+        if 'edge_index' in kwargs and 'num_nodes' in kwargs:
+            edge_index = kwargs['edge_index']
+            num_nodes = kwargs['num_nodes']
+            # We assume node_map is also provided or we cannot map back easily.
+            # If node_map is not provided, we can only train but not easily support get_embeddings by ID unless we just return by index.
+            # But the notebook usage implies we want to evaluate by ID.
+            if 'node_map' in kwargs:
+                self.node_map = kwargs['node_map']
+                self.inv_node_map = {i: node for node, i in self.node_map.items()}
+            else:
+                # If map is not provided, we assume interactions_df can be used to rebuild it 
+                # OR we warn. But let's try to be robust.
+                # If edge_index is passed, usually we should also pass the map used to create it.
+                pass
+        else:
+            # Create graph from interactions
+            # We treat users and items as nodes.
+            # To ensure uniqueness, we might need to prefix them if not already done.
+            # Assuming interactions_df has distinct IDs for users and items or we prefix them.
+            
+            users = interactions_df[user_col].unique()
+            items = interactions_df[item_col].unique()
+            
+            all_nodes = np.concatenate([users, items])
+            all_nodes = np.unique(all_nodes) # safety
+            
+            self.node_map = {node: i for i, node in enumerate(all_nodes)}
+            self.inv_node_map = {i: node for node, i in self.node_map.items()}
+            
+            src_nodes = interactions_df[user_col].map(self.node_map).values
+            dst_nodes = interactions_df[item_col].map(self.node_map).values
+            
+            # Undirected graph: (u, v) and (v, u)
+            edge_index_src = np.concatenate([src_nodes, dst_nodes])
+            edge_index_dst = np.concatenate([dst_nodes, src_nodes])
+            
+            edge_index = np.stack([edge_index_src, edge_index_dst], dtype=torch.long)
+            edge_index = torch.tensor(edge_index, dtype=torch.long) # Convert to tensor
+            num_nodes = len(self.node_map)
+
         self.model = Node2Vec(
-            edge_index=edge_index,
+            edge_index=edge_index.to(self.device),
             embedding_dim=self.embedding_dim,
             walk_length=self.walk_length,
             context_size=self.context_size,
@@ -66,7 +81,8 @@ class Node2VecGenerator(EmbeddingGenerator):
             num_negative_samples=self.num_negative_samples,
             p=self.p,
             q=self.q,
-            sparse=True
+            sparse=True,
+            num_nodes=num_nodes
         ).to(self.device)
         
         loader = self.model.loader(batch_size=self.batch_size, shuffle=True, num_workers=0)
