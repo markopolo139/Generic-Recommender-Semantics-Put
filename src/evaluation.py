@@ -42,6 +42,26 @@ def leave_one_out_split(interactions_df, user_col='user_id', item_col='item_id',
     
     return train_df, test_df
 
+def random_split(interactions, test_size=0.2, random_state=42):
+    """
+    Splits the interactions into train and test sets randomly.
+    
+    Args:
+        interactions: DataFrame containing interactions.
+        test_size: Proportion of the dataset to include in the test split.
+        random_state: Random seed.
+        
+    Returns:
+        train_df, test_df
+    """
+    if random_state is not None:
+        np.random.seed(random_state)
+        
+    test_indices = np.random.choice(interactions.index, size=int(len(interactions) * test_size), replace=False)
+    test_df = interactions.loc[test_indices]
+    train_df = interactions.drop(test_indices)
+    return train_df, test_df
+
 def calculate_metrics(model, train_df, test_df, user_col='user_id', item_col='item_id', k_list=[20, 50, 100, 1000], num_neg_samples=100):
     """
     Calculates evaluation metrics for the given model.
