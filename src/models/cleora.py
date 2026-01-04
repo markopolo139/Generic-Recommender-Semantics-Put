@@ -6,7 +6,7 @@ import itertools
 from src.interfaces import EmbeddingGenerator
 
 class CleoraGenerator(EmbeddingGenerator):
-    def __init__(self, embedding_dim=128, num_walks=5, columns='complex::reflexive::entity'):
+    def __init__(self, embedding_dim=128, num_walks=3, columns='complex::reflexive::entity'):
         self.embedding_dim = embedding_dim
         self.num_walks = num_walks
         self.columns = columns
