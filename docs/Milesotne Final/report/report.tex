@@ -1,0 +1,165 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{ragged2e}
+\usepackage{float}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\usepackage{subcaption}
+
+\title{Generic Recommender System}
+\author{
+  Mateusz Bernart\\
+  \texttt{156072}
+  \and
+  Patryk Janiak\\
+  \texttt{156053}
+  \and
+  Marek Seget\\
+  \texttt{156042}
+}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+Recommender systems are critical components for personalizing user experiences. This report details the development of a generic recommender system designed to handle diverse data sources through a unified graph-based representation. 
+
+The primary challenge in building a generic system is the variability of dataset formats. To address this, we implement a "Convert-First" strategy. Raw data is first transformed into a standardized JSON structure, unifying user IDs, item IDs, and interaction timestamps. This unified format is then ingested by a generic interface to construct a heterogeneous graph connecting users, items, and feature nodes. This structure effectively captures complex relationships and serves as a robust foundation for training various recommendation algorithms, ranging from traditional Matrix Factorization to advanced Graph Neural Networks (GNNs).
+
+\section{Related Work}
+Recent advancements in recommender systems have increasingly leveraged graph-based methods to capture high-order connectivity between users and items. 
+
+Schlichtkrull et al. introduced Relational Graph Convolutional Networks (R-GCNs), demonstrating the efficacy of modeling relational data for link prediction tasks \cite{schlichtkrull2018modeling}. This foundational work supports our use of heterogeneous graphs to model diverse interactions (e.g., "watched", "owned", "rated").
+
+Further exploring inductive capabilities, Teru et al. proposed subgraph reasoning methods for relation prediction, allowing models to generalize to unseen nodes—a critical feature for handling cold-start scenarios in dynamic systems \cite{teru2020inductive}.
+
+More recently, Zhang and Liu have explored path-based neural networks for inductive link prediction, emphasizing the importance of preserving local graph topology when generating embeddings for new entities \cite{zhang2023inductive}.
+
+\section{Dataset Description}
+To validate the generic nature of our framework, we merged two distinct datasets into a single homogeneous structure.
+
+\subsection{MovieLens}
+The preprocessed MovieLens dataset represents the domain of explicit feedback.
+\begin{itemize}
+    \item \textbf{Nodes:} 162,342 Users, 62,423 Movies, 20 Genres.
+    \item \textbf{Edges:} 25,000,095 Explicit Ratings (normalized to 0.5-5.0) and 12,452,811 Implicit interactions (filtered for ratings $\geq 4.0$).
+\end{itemize}
+
+\subsection{Steam Reviews}
+The Steam dataset represents the gaming domain, characterized by implicit feedback (ownership) and rich metadata.
+\begin{itemize}
+    \item \textbf{Nodes:} 22,077 Users, 32,133 Games, 22 Genres.
+    \item \textbf{Edges:} 45,261 User-Game interactions and 72,786 Game-Genre associations.
+\end{itemize}
+
+\subsection{Combined Heterogeneous Graph}
+The final merged graph allows for simultaneous training across domains:
+\begin{itemize}
+    \item \textbf{Total Users:} 184,419
+    \item \textbf{Total Items:} 43,660 (Movies + Games)
+    \item \textbf{Total Interactions:} 12,497,401 User-Item edges.
+\end{itemize}
+
+\section{Method}
+
+\subsection{System Architecture}
+The system workflow follows a three-stage pipeline:
+\begin{enumerate}
+    \item \textbf{Data Ingestion \& Preprocessing:} Loading raw CSVs, normalizing ratings, and processing implicit/explicit feedback.
+    \item \textbf{Graph Construction:} Identifying entities and building the heterogeneous graph where users, items, and features are connected nodes.
+    \item \textbf{Model Training \& Execution:} Selected algorithms generate user and item embeddings to predict top-N recommendations.
+\end{enumerate}
+
+Please refer to \textbf{Appendix A} (Figure \ref{fig:workflow}) for the complete, high-level workflow diagram illustrating these stages.
+
+\subsection{Algorithms}
+We evaluated five distinct model strategies:
+
+\begin{itemize}
+    \item \textbf{Matrix Factorization (MF):} Decomposes the interaction matrix into latent vectors. It effectively captures linear relationships but may miss complex patterns.
+    \item \textbf{Neural Collaborative Filtering (NCF):} Combines Generalized Matrix Factorization (GMF) with a Multi-Layer Perceptron (MLP) to model non-linear user-item relationships.
+    \item \textbf{LightGCN:} A simplified GCN that removes non-linearities, propagating embeddings linearly to capture high-order connectivity (e.g., friends of friends) directly from the graph structure.
+    \item \textbf{Node2Vec:} Uses biased random walks to generate embeddings that preserve both local neighborhood (homophily) and structural roles.
+    \item \textbf{Cleora:} An ultra-fast, memory-efficient algorithm based on graph walks. It is designed for massive scalability and operates without an Artificial Neural Network (ANN).
+\end{itemize}
+
+\section{Experimental Setup}
+The models were evaluated using standard information retrieval metrics at $K \in \{20, 50, 100, 1000\}$:
+\begin{itemize}
+    \item \textbf{Precision @ K:} Measures the proportion of recommended items that are relevant.
+    \item \textbf{HitRate @ K:} Measures the fraction of users for whom at least one relevant item is recommended.
+    \item \textbf{NDCG @ K:} Normalized Discounted Cumulative Gain, accounting for the rank of relevant items.
+    \item \textbf{MAP @ K:} Mean Average Precision.
+\end{itemize}
+
+The evaluation focused on the trade-off between **Accuracy** (relevance to ground truth) and **Diversity/Novelty** (ability to discover niche content).
+
+\section{Results and Conclusions}
+
+\subsection{Accuracy vs. Diversity Trade-off}
+The experimental results highlight a clear distinct between "Safe" and "Discovery" engines.
+
+\begin{figure}[H]
+    \centering
+    % Placeholder for the Accuracy vs Diversity scatter plot
+    \includegraphics[width=0.8\linewidth]{accuracy_diversity_tradeoff.png}
+    \caption{The Trade-off: Accuracy (HitRate@20) vs. Diversity. LightGCN and Node2Vec occupy the 'Safe Zone', while Cleora and NCF inhabit the 'Discovery Zone'.}
+    \label{fig:tradeoff}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Accuracy Leaders (The Safe Zone):} LightGCN and Node2Vec dominated in relevance metrics. LightGCN achieved the highest global reliability (AUC 0.91), making it the ideal candidate for a primary "Home Screen" feed where relevance is paramount.
+    \item \textbf{Discovery Engines (The Discovery Zone):} Cleora and NCF struggled with ground-truth prediction but excelled in Novelty and Diversity. Cleora acted as a "deep dive explorer," suggesting items with very low average popularity (~28) compared to Node2Vec (~1150).
+\end{itemize}
+
+\subsection{Final Recommendations}
+Based on the analysis, we propose a hybrid deployment strategy:
+\begin{itemize}
+    \item \textbf{Primary Feed:} Use \textbf{LightGCN} for high accuracy and user satisfaction.
+    \item \textbf{Discovery Section:} Use \textbf{Matrix Factorization} or \textbf{NCF} to balance relevance with diversity ("Because You Watched").
+    \item \textbf{Deep Dive:} Use \textbf{Cleora} to surface long-tail, niche content that users rarely discover through popularity-biased models.
+\end{itemize}
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{zhang2023inductive}
+Canlin Zhang and Xiuwen Liu.
+\newblock Inductive Link Prediction in Knowledge Graphs using Path-based Neural Networks.
+\newblock \emph{arXiv preprint arXiv:2312.10293}, 2023.
+
+\bibitem{teru2020inductive}
+Komal K. Teru, Etienne Denis, and William L. Hamilton.
+\newblock Inductive Relation Prediction by Subgraph Reasoning.
+\newblock \emph{arXiv preprint arXiv:1911.06962}, 2020.
+
+\bibitem{schlichtkrull2018modeling}
+Michael Schlichtkrull, Thomas N. Kipf, Peter Bloem, Rianne van den Berg, Ivan Titov, and Max Welling.
+\newblock Modeling Relational Data with Graph Convolutional Networks.
+\newblock \emph{arXiv preprint arXiv:1703.06103}, 2017.
+
+\end{thebibliography}
+
+\appendix
+\section{Appendix}
+
+\begin{figure}[H]
+    \centering
+    % Placeholder for the system workflow diagram
+    \includegraphics[width=1.0\linewidth, height=0.9\textheight, keepaspectratio]{workflow_diagram.png} 
+    \caption{Generic Recommender System Workflow: From Data Ingestion to Recommendation Generation}
+    \label{fig:workflow}
+\end{figure}
+
+\end{document}
