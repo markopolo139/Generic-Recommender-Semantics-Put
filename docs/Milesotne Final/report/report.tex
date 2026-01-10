@@ -71,7 +71,7 @@ The final merged graph allows for simultaneous training across domains:
     \item \textbf{Total Interactions:} 12,497,401 User-Item edges.
 \end{itemize}
 
-\section{Method}
+\section{Method Description}
 
 \subsection{System Architecture}
 The system workflow follows a three-stage pipeline designed to handle data heterogeneity:
@@ -102,7 +102,7 @@ We evaluated five distinct model strategies, ranging from traditional factorizat
     \item \textbf{Cleora:} An ultra-fast, memory-efficient graph embedding algorithm designed for massive scalability. It operates without an Artificial Neural Network (ANN), instead iteratively refining embeddings based on local neighborhood data via graph walks. This makes it particularly suitable for extremely large datasets where other models face memory constraints.
 \end{itemize}
 
-\section{Experimental Setup}
+\section{Evaluation Strategy}
 
 \subsection{Inference Pipeline}
 To evaluate the models in a realistic setting, we implemented a complete inference pipeline that simulates a production recommender system:
@@ -126,7 +126,7 @@ Beyond accuracy, we analyzed the \textbf{"Discovery"} capabilities of each model
 
 % The evaluation focused on the trade-off between \textbf{Accuracy} (relevance to ground truth) and \textbf{Diversity/Novelty} (ability to discover niche content).
 
-\section{Results and Conclusions}
+\section{Outcomes and Conclusions}
 
 \subsection{Performance Metrics: Accuracy \& Relevance}
 We evaluated the models on four key metrics at $K=20$. As shown in Table \ref{tab:accuracy}, graph-based models (Node2Vec, LightGCN) significantly outperform traditional methods in relevance tasks.
