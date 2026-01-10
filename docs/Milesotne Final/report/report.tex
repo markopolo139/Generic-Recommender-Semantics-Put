@@ -113,6 +113,8 @@ To evaluate the models in a realistic setting, we implemented a complete inferen
     \item \textbf{Filtering \& Ranking:} Items already present in the user's interaction history are filtered out. The remaining candidates are sorted by prediction score to produce the final Top-N recommendation list.
 \end{enumerate}
 
+Please refer to \textbf{Appendix A} (Figure \ref{fig:inference}) for the complete inference diagram.
+
 \subsection{Evaluation Metrics}
 We assessed performance using a suite of information retrieval metrics at $K \in \{20, 50, 100, 1000\}$ to measure top-list quality:
 \begin{itemize}
@@ -220,6 +222,14 @@ Michael Schlichtkrull, Thomas N. Kipf, Peter Bloem, Rianne van den Berg, Ivan Ti
     \includegraphics[width=1.0\linewidth, height=0.9\textheight, keepaspectratio]{workflow_diagram.png} 
     \caption{Generic Recommender System Workflow: From Data Ingestion to Recommendation Generation}
     \label{fig:workflow}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    % Placeholder for the system inference diagram
+    \includegraphics[width=1.0\linewidth, height=0.9\textheight, keepaspectratio]{inference_diagram.png} 
+    \caption{Generic Recommender System Workflow: Recommendation Inference}
+    \label{fig:inference}
 \end{figure}
 
 \end{document}
